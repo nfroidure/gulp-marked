@@ -15,12 +15,16 @@ describe('gulp-marked markdown conversion', function() {
       var filename = path.join(__dirname, './fixtures/data.md');
       var markdown = fs.readFileSync(filename, { encoding: 'utf8' });
 
-        gulp.src(filename)
+        gulp.src(filename, {buffer: false})
           .pipe(marked())
           .pipe(es.map(function(file) {
-            markedjs(markdown, function (err, content) {
-              expect(String(file.contents)).to.equal(content);
-              done();
+            // Get the buffer to compare results
+            file.transform(function(err, buf, cb) {
+              markedjs(markdown, function (err, content) {
+                expect(String(buf)).to.equal(content);
+                cb(null, buf);
+                done();
+              });
             });
           }));
 

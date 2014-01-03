@@ -16,7 +16,7 @@
     "test": "mocha"
   },
   "devDependencies": {
-    "gulp": "~2.6.0",
+    "gulp": "~4.0.0",
     "mocha": "~1.15.1",
     "chai": "~1.8.1"
   },

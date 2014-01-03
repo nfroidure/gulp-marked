@@ -6,10 +6,28 @@ module.exports = function(opt) {
   marked.setOptions(opt || {});
 
   return es.map(function (file, callback) {
-    marked(String(file.contents), function (err, content) {
-      if (!err) file.contents = content;
-      callback(err, file);
+
+    // Call the transform function with a callback
+    file.transform(function(err, buf, cb) {
+
+      // Handle any error
+      if(err) throw err;
+
+      // Use the buffered content
+      marked(String(buf), function (err, content) {
+
+        // Report any error with the callback
+        if (err) {
+          cb(err);
+        // Send the new buffer content back
+        } else {
+          cb(null, Buffer(content));
+        }
+
+      });
     });
+
+    callback(null, file);
   });
 
 };
